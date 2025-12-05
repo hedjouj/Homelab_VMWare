@@ -104,7 +104,7 @@ Nom NetBIOS : MONLAB (généré automatiquement)
 
 L'installation a pris environ 10 à 15 minutes. Le serveur a redémarré automatiquement.
 Après le redémarrage, l'écran de connexion montre maintenant MONLAB\Administrator, confirmant que le domaine est actif.
-![](Screenshot/rôles_installés.png)
+![Rôles installés sur Server Manager](Screenshot/rôles_installés.png)
 
 ## Étape 6 : Configuration de DHCP
 Le serveur DHCP distribue automatiquement les adresses IP aux clients du réseau.
@@ -119,4 +119,78 @@ Routeur (passerelle) : 172.16.0.1
 Serveur DNS : 172.16.0.1
 
 Important : J'ai autorisé le serveur DHCP dans Active Directory en faisant un clic droit sur le nom du serveur dans le gestionnaire DHCP et en sélectionnant "Authorize". La flèche verte indique que le serveur est autorisé et actif.
-![](Screenshot/étendue_DHCP.png)
+![Gestionnaire DHCP¨avec l'étendue](Screenshot/étendue_DHCP.png)
+
+## Étape 7 : Installation du client Windows 10
+J'ai créé une deuxième machine virtuelle pour le client :
+
+Nom : Client1
+Type : Windows 10
+RAM : 4 Go
+Disque : 40 Go
+Réseau : UNE SEULE carte sur VMnet1 (Host-only)
+
+Il est important que le client soit uniquement sur le réseau interne pour recevoir son IP du serveur DC.
+Après l'installation de Windows 10, j'ai vérifié avec ipconfig /all que le client reçoit bien :
+
+Une IP entre 172.16.0.100 et 172.16.0.200
+Le serveur DHCP : 172.16.0.1
+Le serveur DNS : 172.16.0.1
+
+J'ai testé la connectivité avec ping 172.16.0.1 et nslookup monlab.local. Les deux commandes doivent fonctionner avant de joindre le domaine.
+![Résultat de la commande ipconfig /all côté client](Screenshot/ipconfig_result_client.png)
+
+## Étape 8 : Jointure du client au domaine
+Sur le client Windows 10, j'ai fait un clic droit sur "This PC" puis "Properties". Dans la fenêtre des propriétés système, j'ai cliqué sur "Change settings" puis "Change".
+J'ai sélectionné "Domain" et saisi monlab.local. Windows a demandé les identifiants d'un compte autorisé à joindre le domaine. J'ai utilisé :
+
+Nom d'utilisateur : Administrator
+Mot de passe : Password1!
+
+Un message de bienvenue "Welcome to the monlab.local domain" confirme le succès. Après le redémarrage, l'écran de connexion affiche maintenant "Other user" avec le domaine MONLAB.
+Dans Active Directory Users and Computers sur le serveur, l'ordinateur apparaît maintenant dans le conteneur "Computers".
+![Ecran de connexion côté client avec le nom de domaine apparant](Screenshot/écran_de_connexion_client.png)
+
+## Étape 9 : Création des Unités d'Organisation
+Les Organizational Units (OU) permettent d'organiser les utilisateurs et les ressources de manière logique, par département par exemple.
+Dans Active Directory Users and Computers, j'ai fait un clic droit sur monlab.local puis New > Organizational Unit.
+J'ai créé trois OU :
+
+Comptabilité
+Finances
+Informatique
+
+J'ai laissé cochée la protection contre la suppression accidentelle pour chaque OU.
+![Les 3 unités d'organisations](Screenshot/unités_orga2.png)
+
+## Étape 10 : Création des utilisateurs
+J'ai créé 10 utilisateurs répartis dans les trois départements.
+Pour créer un utilisateur, j'ai cliqué sur l'OU concernée, puis clic droit > New > User.
+Département Comptabilité (3 utilisateurs)
+
+Sophie Martin (smartin)
+Pierre Dubois (pdubois)
+Julie Lefebvre (jlefebvre)
+
+Département Finances (3 utilisateurs)
+
+Thomas Bernard (tbernard)
+Marie Durand (mdurand)
+Lucas Petit (lpetit)
+
+Département Informatique (4 utilisateurs)
+
+Franck Leboeuf (fleboeuf)
+Zinedine Zidane
+Sofian Messaoui
+Lilian Thuram
+
+Pour simplifier l'apprentissage, j'ai configuré tous les comptes avec :
+
+Mot de passe : Password1!
+Option "Password never expires" cochée
+Option "User must change password at next logon" décochée
+
+En environnement professionnel, on forcerait le changement de mot de passe à la première connexion et on appliquerait une politique de complexité stricte.
+![](Screenshot/unités_orga.png)
+
