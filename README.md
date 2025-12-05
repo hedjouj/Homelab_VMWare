@@ -25,7 +25,8 @@ Carte unique : Réseau Host-only (VMnet1) connecté au réseau interne uniquemen
 
 Cette configuration permet d'isoler les clients sur un réseau privé sécurisé, tandis que le serveur peut accéder à Internet pour les mises à jour.
 
-![Configuration VMnet1 dans Virtual Network Editor](Screenshot/)
+
+![Configuration VMnet1 dans Virtual Network Editor](Screenshot/config-vmnet1.png)
 
 ## Étape 1 : Installation de VMware Workstation
 J'ai téléchargé VMware Workstation Pro depuis le site officiel de VMware. L'installation est simple et ne nécessite pas de licence pour un usage personnel et non commercial.
@@ -39,6 +40,7 @@ Subnet IP : 172.16.0.0
 Masque : 255.255.255.0
 DHCP : Désactivé (important car le serveur DC sera le serveur DHCP)
 Adaptateur hôte : Décoché (pour éviter les conflits d'IP)
+
 
 ![Configuration VMnet1 dans Virtual Network Editor](Screenshot/config-vmnet1.png)
 
@@ -55,7 +57,11 @@ Firmware : BIOS (meilleure compatibilité)
 Pour l'installation, j'ai téléchargé l'ISO de Windows Server 2019 Standard Evaluation (180 jours gratuits) depuis le site Microsoft Evaluation Center. Il est important de choisir la version "Desktop Experience" pour avoir l'interface graphique.
 Pendant l'installation, j'ai sélectionné "Custom: Install Windows only (advanced)" et laissé Windows créer automatiquement les partitions sur le disque.
 Le mot de passe administrateur défini est Password1! (à changer en production réelle).
+
+
 ![](Screenshot/install-Windows_server.png)
+
+
 ![](Screenshot/DC_home.png)
 
 ## Étape 4 : Configuration réseau du serveur
@@ -80,6 +86,8 @@ Passerelle : Vide (le serveur est lui-même la passerelle)
 DNS : 127.0.0.1 (le serveur est son propre DNS)
 
 J'ai vérifié la configuration avec la commande ipconfig /all dans l'invite de commandes.
+
+
 ![](Screenshot/Ipconfig_result.png)
 
 ## Étape 5 : Installation d'Active Directory Domain Services
@@ -104,6 +112,8 @@ Nom NetBIOS : MONLAB (généré automatiquement)
 
 L'installation a pris environ 10 à 15 minutes. Le serveur a redémarré automatiquement.
 Après le redémarrage, l'écran de connexion montre maintenant MONLAB\Administrator, confirmant que le domaine est actif.
+
+
 ![Rôles installés sur Server Manager](Screenshot/rôles_installés.png)
 
 ## Étape 6 : Configuration de DHCP
@@ -119,6 +129,8 @@ Routeur (passerelle) : 172.16.0.1
 Serveur DNS : 172.16.0.1
 
 Important : J'ai autorisé le serveur DHCP dans Active Directory en faisant un clic droit sur le nom du serveur dans le gestionnaire DHCP et en sélectionnant "Authorize". La flèche verte indique que le serveur est autorisé et actif.
+
+
 ![Gestionnaire DHCP¨avec l'étendue](Screenshot/étendue_DHCP.png)
 
 ## Étape 7 : Installation du client Windows 10
@@ -138,6 +150,7 @@ Le serveur DHCP : 172.16.0.1
 Le serveur DNS : 172.16.0.1
 
 J'ai testé la connectivité avec ping 172.16.0.1 et nslookup monlab.local. Les deux commandes doivent fonctionner avant de joindre le domaine.
+
 ![Résultat de la commande ipconfig /all côté client](Screenshot/ipconfig_result_client.png)
 
 ## Étape 8 : Jointure du client au domaine
@@ -149,6 +162,7 @@ Mot de passe : Password1!
 
 Un message de bienvenue "Welcome to the monlab.local domain" confirme le succès. Après le redémarrage, l'écran de connexion affiche maintenant "Other user" avec le domaine MONLAB.
 Dans Active Directory Users and Computers sur le serveur, l'ordinateur apparaît maintenant dans le conteneur "Computers".
+
 ![Ecran de connexion côté client avec le nom de domaine apparant](Screenshot/écran_de_connexion_client.png)
 
 ## Étape 9 : Création des Unités d'Organisation
@@ -161,6 +175,7 @@ Finances
 Informatique
 
 J'ai laissé cochée la protection contre la suppression accidentelle pour chaque OU.
+
 ![Les 3 unités d'organisations](Screenshot/unités_orga2.png)
 
 ## Étape 10 : Création des utilisateurs
