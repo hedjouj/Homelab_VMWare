@@ -26,7 +26,6 @@ Carte unique : Réseau Host-only (VMnet1) connecté au réseau interne uniquemen
 Cette configuration permet d'isoler les clients sur un réseau privé sécurisé, tandis que le serveur peut accéder à Internet pour les mises à jour.
 
 
-![Configuration VMnet1 dans Virtual Network Editor](Screenshot/config-vmnet1.png)
 
 ## Étape 1 : Installation de VMware Workstation
 J'ai téléchargé VMware Workstation Pro depuis le site officiel de VMware. L'installation est simple et ne nécessite pas de licence pour un usage personnel et non commercial.
