@@ -208,3 +208,118 @@ Option "User must change password at next logon" décochée
 En environnement professionnel, on forcerait le changement de mot de passe à la première connexion et on appliquerait une politique de complexité stricte.
 ![](Screenshot/unités_orga.png)
 
+## Étape 11 : Création des groupes de sécurité
+
+Les groupes de sécurité permettent de gérer les permissions de manière efficace. Au lieu de donner des droits à chaque utilisateur individuellement, on donne des droits au groupe et on ajoute les utilisateurs au groupe.
+J'ai créé un groupe dans chaque OU (clic droit sur l'OU > New > Group) :
+
+Groupe Comptabilité (dans l'OU Comptabilité)
+Groupe Finances (dans l'OU Finances)
+Groupe Informatique (dans l'OU Informatique)
+
+Pour chaque groupe :
+
+Group scope : Global
+Group type : Security
+
+## Étape 12 : Ajout des utilisateurs aux groupes
+J'ai ouvert les propriétés de chaque groupe (double-clic) et suis allé dans l'onglet "Members".
+En cliquant sur "Add", j'ai pu ajouter les utilisateurs du département au groupe correspondant.
+Pour gagner du temps, on peut ajouter plusieurs utilisateurs en une fois en séparant les noms par des points-virgules. Par exemple : "Thomas Bernard; Marie Durand; Lucas Petit"
+Après validation avec "Check Names", tous les utilisateurs sont ajoutés au groupe.
+Résultat final :
+
+Groupe Comptabilité contient Sophie, Pierre et Julie
+Groupe Finances contient Thomas, Marie et Lucas
+Groupe Informatique contient Zinedine, Sofian, Lilan et Franck
+
+![](Screenshot/Membres%20des%20OU.png)
+
+## Étape 13 : Création des dossiers partagés
+Sur le serveur DC, j'ai créé une structure de dossiers pour les partages réseau.
+Dans C:, j'ai créé un dossier "Partages" contenant trois sous-dossiers :
+
+Comptabilité
+Finances
+Informatique
+
+Pour tester l'accès ultérieurement, j'ai placé un fichier texte dans chaque dossier.
+
+## Étape 14 : Configuration des partages et permissions
+Pour chaque dossier, j'ai configuré deux niveaux de permissions : les permissions de partage et les permissions NTFS (sécurité).
+Configuration du partage (exemple pour Comptabilité)
+Clic droit sur le dossier > Properties > onglet Sharing > Advanced Sharing
+
+Cocher "Share this folder"
+Share name : Comptabilité
+Cliquer sur Permissions
+Supprimer "Everyone"
+Ajouter "Groupe Comptabilité"
+Donner les permissions "Change" et "Read"
+
+Configuration des permissions NTFS
+Dans l'onglet Security :
+
+Cliquer sur Advanced
+Désactiver l'héritage (Disable inheritance)
+Choisir "Convert inherited permissions into explicit permissions"
+Supprimer le groupe "Users"
+Ajouter "Groupe Comptabilité" avec la permission "Modify"
+
+J'ai répété ces étapes pour les dossiers Finances et Informatique en remplaçant le groupe par le groupe correspondant.
+
+![](Screenshot/security_settings%20of%20OU.png)
+
+## Étape 15 : Tests d'accès depuis le client
+Pour valider que les permissions fonctionnent correctement, j'ai testé l'accès aux partages depuis le client Windows 10.
+Test avec Sophie Martin (Comptabilité)
+Connecté en tant que smartin sur le client, j'ai ouvert l'Explorateur Windows et tapé dans la barre d'adresse : \172.16.0.1\Comptabilité
+Le dossier s'ouvre et je peux voir et modifier les fichiers. C'est normal, Sophie fait partie du Groupe Comptabilité.
+En revanche, quand j'essaye d'accéder à \172.16.0.1\Finances, j'obtiens un message "Access Denied". C'est exactement ce qu'on veut : Sophie ne peut pas accéder aux dossiers des autres départements.
+Test avec Thomas Bernard (Finances)
+Après déconnexion et connexion avec tbernard, j'ai pu accéder au dossier Finances mais pas aux dossiers Comptabilité ni Informatique.
+Ces tests confirment que la séparation des accès par département fonctionne correctement.
+
+![](Screenshot/create%20file%20as%20compta.png)
+
+![](Screenshot/access_denied.png)
+
+## Problèmes rencontrés et solutions
+Conflit d'adresses IP
+Au début, le serveur DC affichait l'IP 172.16.0.1 "en double". Cela était dû à l'option "Connecter un hôte et un adaptateur virtuel" activée dans VMnet1. En décochant cette option dans le Virtual Network Editor, le conflit a été résolu.
+Client recevant une mauvaise IP
+Le client Windows 10 recevait une IP 192.168.116.x au lieu de 172.16.0.x. Le problème venait de deux sources :
+
+La carte réseau du client était sur VMnet8 (NAT) au lieu de VMnet1 (Host-only)
+Le DHCP de VMware était activé sur VMnet1 et entrait en conflit avec le DHCP du serveur DC
+
+La solution a été de vérifier la configuration de la carte dans VMware et de désactiver le DHCP VMware pour VMnet1.
+Ordre de démarrage
+Il est important de toujours démarrer le serveur DC avant les clients. Si le serveur n'est pas allumé, les clients ne peuvent pas obtenir d'adresse IP via DHCP et ne peuvent pas résoudre les noms de domaine via DNS.
+Compétences acquises
+Ce projet m'a permis d'apprendre et de mettre en pratique :
+
+Installation et configuration de Windows Server 2019
+Déploiement d'Active Directory Domain Services
+Configuration de services réseau (DNS, DHCP)
+Gestion des utilisateurs et des groupes dans Active Directory
+Configuration de partages réseau sécurisés
+Gestion des permissions NTFS et de partage
+Troubleshooting réseau (ping, ipconfig, nslookup)
+Architecture réseau à plusieurs segments
+Virtualisation avec VMware Workstation
+
+Ces compétences sont essentielles pour un poste d'administrateur système, car Active Directory est utilisé dans la majorité des entreprises pour gérer leur infrastructure IT.
+Améliorations futures possibles
+Pour enrichir ce homelab, je pourrais ajouter :
+
+Configuration de Group Policy Objects (GPO) pour appliquer des paramètres automatiquement
+Mise en place de scripts PowerShell pour créer des utilisateurs en masse
+Ajout d'un serveur de fichiers dédié
+Configuration de Windows Server Update Services (WSUS)
+Intégration d'un serveur Ubuntu pour pratiquer Linux dans un environnement Active Directory
+Mise en place de sauvegardes automatiques
+Configuration de quotas sur les dossiers partagés
+
+## Conclusion
+Ce projet m'a donné une compréhension pratique et concrète de la gestion d'infrastructure Active Directory. J'ai pu voir comment les concepts théoriques s'appliquent dans un environnement réel et comment résoudre les problèmes qui surviennent lors de la mise en place d'une telle infrastructure.
