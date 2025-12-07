@@ -206,7 +206,8 @@ Option "Password never expires" cochée
 Option "User must change password at next logon" décochée
 
 En environnement professionnel, on forcerait le changement de mot de passe à la première connexion et on appliquerait une politique de complexité stricte.
-![](Screenshot/unités_orga.png)
+
+![Utilisateurs du département Informatique dans Active Directory](Screenshot/unités_orga.png)
 
 ## Étape 11 : Création des groupes de sécurité
 
@@ -233,7 +234,7 @@ Groupe Comptabilité contient Sophie, Pierre et Julie
 Groupe Finances contient Thomas, Marie et Lucas
 Groupe Informatique contient Zinedine, Sofian, Lilian et Franck
 
-![](Screenshot/Membres%20des%20OU.png)
+![Membres du groupe Informatique](Screenshot/Membres%20des%20OU.png)
 
 ## Étape 13 : Création des dossiers partagés
 Sur le serveur DC, j'ai créé une structure de dossiers pour les partages réseau.
