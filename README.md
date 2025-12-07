@@ -3,7 +3,8 @@
 ## Introduction
 Ce projet consiste à créer un environnement Active Directory complet en virtualisation pour apprendre l'administration système. J'ai construit une infrastructure réseau avec un contrôleur de domaine et des clients Windows 10, en utilisant VMware Workstation.
 L'objectif est de comprendre comment fonctionnent les services d'annuaire dans un environnement professionnel, notamment la gestion centralisée des utilisateurs, des groupes et des permissions.
-Technologies utilisées
+
+## Technologies utilisées:
 
 VMware Workstation Player (virtualisation)
 Windows Server 2019 Standard Evaluation
