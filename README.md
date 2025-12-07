@@ -231,7 +231,7 @@ Résultat final :
 
 Groupe Comptabilité contient Sophie, Pierre et Julie
 Groupe Finances contient Thomas, Marie et Lucas
-Groupe Informatique contient Zinedine, Sofian, Lilan et Franck
+Groupe Informatique contient Zinedine, Sofian, Lilian et Franck
 
 ![](Screenshot/Membres%20des%20OU.png)
 
