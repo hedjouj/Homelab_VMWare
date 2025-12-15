@@ -315,14 +315,21 @@ Virtualisation avec VMware Workstation
 
 Ces compétences sont essentielles pour un poste d'administrateur système, car Active Directory est utilisé dans la majorité des entreprises pour gérer leur infrastructure IT.
 Améliorations futures possibles
+
 Pour enrichir ce homelab, je pourrais ajouter :
 
 Configuration de Group Policy Objects (GPO) pour appliquer des paramètres automatiquement
+
 Mise en place de scripts PowerShell pour créer des utilisateurs en masse
+
 Ajout d'un serveur de fichiers dédié
+
 Configuration de Windows Server Update Services (WSUS)
+
 Intégration d'un serveur Ubuntu pour pratiquer Linux dans un environnement Active Directory
+
 Mise en place de sauvegardes automatiques
+
 Configuration de quotas sur les dossiers partagés
 
 ## Conclusion
