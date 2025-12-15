@@ -298,7 +298,9 @@ Le DHCP de VMware était activé sur VMnet1 et entrait en conflit avec le DHCP d
 La solution a été de vérifier la configuration de la carte dans VMware et de désactiver le DHCP VMware pour VMnet1.
 Ordre de démarrage
 Il est important de toujours démarrer le serveur DC avant les clients. Si le serveur n'est pas allumé, les clients ne peuvent pas obtenir d'adresse IP via DHCP et ne peuvent pas résoudre les noms de domaine via DNS.
-Compétences acquises
+
+## Compétences acquises
+
 Ce projet m'a permis d'apprendre et de mettre en pratique :
 
 Installation et configuration de Windows Server 2019
